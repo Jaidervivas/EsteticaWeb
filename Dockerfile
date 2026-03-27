@@ -1,8 +1,11 @@
-FROM maven:3.8.5-openjdk-17 AS build
+# Paso 1: Usar una imagen con Java y Ant
+FROM frekele/ant:1.10.3-jdk8 AS build
 COPY . .
-RUN mvn clean package -DskipTests
+# Construir el proyecto usando Ant
+RUN ant jar
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/*.jar app.jar
+# Paso 2: Ejecutar la aplicación
+FROM openjdk:8-jre-slim
+COPY --from=build /dist/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+CMD ["java", "-jar", "app.jar"]
