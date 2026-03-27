@@ -2,12 +2,13 @@
 FROM eclipse-temurin:17-jdk AS build
 RUN apt-get update && apt-get install -y ant
 COPY . .
+# Forzamos la construcción del JAR
 RUN ant jar
 
 # Paso 2: Ejecución
 FROM eclipse-temurin:17-jre
-# Copiamos el archivo .jar generado por Ant
-COPY --from=build /dist/*.jar app.jar
+# Copiamos el archivo con el nombre exacto que vimos en tu carpeta dist
+COPY --from=build /dist/PaginaWeb.java.jar app.jar
 EXPOSE 8080
-# La clave es "-Djava.awt.headless=true" para que no busque pantalla
+# Ejecutamos en modo sin interfaz gráfica para que no falle en el servidor
 CMD ["java", "-Djava.awt.headless=true", "-jar", "app.jar"]
