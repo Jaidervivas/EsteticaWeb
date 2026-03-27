@@ -4,8 +4,8 @@ COPY . .
 # Construir el proyecto usando Ant
 RUN ant jar
 
-# Paso 2: Ejecutar la aplicación
-FROM openjdk:8-jre-slim
+# Paso 2: Ejecutar la aplicación (Imagen actualizada)
+FROM eclipse-temurin:8-jre
 COPY --from=build /dist/*.jar app.jar
 EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]
